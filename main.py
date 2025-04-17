@@ -2,7 +2,7 @@ import sys, random, time
 
 firsttime = True
 nuclearbombswitch = False
-nuclearbombcountdown = 5
+nuclearbombcountdown = 3
 firstdraw = "None"
 
 bothasace = False
