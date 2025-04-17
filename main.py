@@ -151,87 +151,103 @@ def carddrawsequence():
     if firstdraw in noresponse:
         botcard = random.randint(1,13)
         playercard = random.randint(1,13)
-        facecardcheck()
-    if firstdraw in yesresponse:
+        cardcompare()
+    elif firstdraw in yesresponse:
         playercard = random.randint(1,13)
         botcard = random.randint(1,13)
-        facecardcheck()
-
-def acecheck():
-    global botcard, playercard, playerhasace, bothasace
-    botcard = botcard - 10
-    playercard = playercard - 10
-    if botcard == -9 or playercard == -9:
-        if botcard == -9:
-         bothasace = True
-        else:
-         playerhasace = True
-         facecardcheck()
-
-def facecardcheck():
-    global botcard, playercard, playerfacecard, botfacecard, playerhasace, bothasace, checking
-    checking = True
-    bothasfacecard = False
-    playerhasfacecard = False
-    while checking == True:
-        if bothasace or playerhasace:
-
-            if bothasace:
-                botfacecard = facecardoptions[0]
-                bothasfacecard = True
-            if playerhasace:
-                playerfacecard = facecardoptions[0]
-                playerhasfacecard = True   
-
-        if playerhasace == False:
-         if playercard <= len(facecardoptions):
-              playerfacecard = facecardoptions[int(playercard)]
-              playerhasfacecard = True
-        elif bothasace == False:
-              if botcard <= len(facecardoptions):
-                 botfacecard = facecardoptions[int(botcard)] 
-                 bothasfacecard = True
-                 checking = False
-                 break
-
-    if checking == False:
-        pulledcardstatements()
-
-
-def pulledcardstatements():
-    time.sleep(1)
-    if bothasfacecard == True and playerhasfacecard == True:
-        print(f"Your opponent has pulled a {botfacecardname}, you have a {playerfacecardname}.")
-        cardcomparison()
-    if bothasfacecard == True:
-        print(f"Your opponent has a {botfacecardname}, you have a {playercard}!")
-        cardcomparison()
-    if playerhasfacecard == True:
-        print(f"Your opponent has a {botcard}, you have a {playerfacecardname}")  
-        cardcomparison()
+        cardcompare()
     else:
-        print(f"Your opponent has a {botcard}, you have a {playercard}")
-        cardcomparison()
+        print("Try again.")
+        carddrawsequence()
 
-def cardcomparison():
- global botchips, botcard, playercard, playersetbet, botpot, botchips, playerchips
- time.sleep(1)
- if playercard == botcard:
-     print("You have tied!")
-     playagain()
- if playercard > botcard:
-     print("Your card is higher! You Win!!!")
-     playerchips = playerchips + botpot
-     botchips = botchips - botpot
-     playagain()
- if playercard < botcard:
-     print("Your card is lower! You Lose!!!")
-     botchips = botchips + playersetbet
-     playerchips = playerchips - playersetbet
-     playagain()
+def cardcompare():
+    global playercard, playerhasfacecard, playercheck, botcard, bothasfacecard, botcheck, playerchips, botchips, playersetbet, botpot, playerfacecard, botfacecard
+    playercheck = True
+
+    while playercheck:
+        if playercard == 1:
+         playerfacecard = facecardoptions[0]
+         playerhasfacecard = True
+         botcheck = True
+         playercheck = False
+        elif playercard > 10:
+         playerfacecard = facecardoptions[int(playercard) - 10]
+         playerhasfacecard = True
+         botcheck = True
+         playercheck = False
+        else:
+         botcheck = True
+         playercheck = False
+
+    while botcheck:
+        if botcard == 1:
+         botfacecard = facecardoptions[0]
+         bothasfacecard = True
+         botcheck = False
+        elif botcard > 10:
+         botfacecard = facecardoptions[int(botcard) - 10]
+         bothasfacecard = True
+         botcheck = False
+        else:
+         botcheck = False
+
+    while not botcheck and not playercheck:
+     if bothasfacecard and playerhasfacecard:
+         if botcard > playercard:
+             print(f"Loser! you have: a {playerfacecard.name}! Your enemy has a {botfacecard.name}")
+             botchips = botchips + playersetbet
+             playerchips = playerchips + botpot
+             playagain()
+         elif botcard == playercard:
+             print(f"uhhhh. you both got {playerfacecard.name} and {botfacecard.name}")
+             playagain()
+         else:
+             print(f"Winner! you have: a {playerfacecard.name}! Your enemy has a {botfacecard.name}")
+             playerchips = playerchips + botpot
+             botchip = botchips - botpot
+             playagain()
+     elif bothasfacecard and not playerhasfacecard:
+         if botcard > playercard:
+             print(f"Loser you have: a {playercard}! Your enemy has a {botfacecard.name}")
+             botchips = botchips + playersetbet
+             playerchips = playerchips + botpot
+             playagain()
+         else:
+             print(f"Winner! you have: a {playercard}! Your enemy has an {botfacecard.name}")
+             playerchips = playerchips + botpot
+             botchip = botchips - botpot
+             playagain()
+     elif playerhasfacecard and not bothasfacecard:
+        if playercard > botcard:
+         print(f"Winner! you have: a {playerfacecard.name}! Your enemy has a {botcard}")
+         playerchips = playerchips + botpot
+         botchip = botchips - botpot
+         playagain()
+        else:
+         print(f"Loser! you have: an {playerfacecard.name}! Your enemy has a {botcard}")
+         botchips = botchips + playersetbet
+         playerchips = playerchips + botpot
+         playagain()
+     else:
+        if playercard > botcard:
+            print(f"You win! You pulled a {playercard} and your enemy pulled a {botcard}")
+            playerchips = playerchips + botpot
+            botchip = botchips - botpot
+            playagain()
+        elif botcard < playercard:
+            print(f"You lose! You pulled a {playercard} and your enemy pulled a {botcard}")
+            botchips = botchips + playersetbet
+            playerchips = playerchips + botpot
+            playagain()
+        else:
+            print(f"uhhhh. you both got a {playercard} and a {botcard}")
+            playagain()
+    
 
 def playagain():
     time.sleep(1)
+    playerfacecard = []
+    botfacecard = []
     restartrequest = input("Would you like to play again? \n Y/N:")
     if restartrequest in yesresponse:
         start(firsttime = False)
