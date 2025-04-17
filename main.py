@@ -30,7 +30,6 @@ class Facecard():
     ):
         self.name = name
         self.value = value
-# Jack= 11, King = 12 , Queen = 13 , Ace = 1
 
 ace = Facecard("Ace", 1)
 jack = Facecard("Jack", 11)
@@ -242,7 +241,6 @@ def cardcompare():
         else:
             print(f"uhhhh. you both got a {playercard} and a {botcard}")
             playagain()
-    
 
 def playagain():
     time.sleep(1)
