@@ -14,11 +14,15 @@ playerfacecardname = "None"
 bothasfacecard = False
 botfacecardname = "None"
 
+botwin = False
+playerwin = False
+tie = False
+
 playercard = 0
 botcard = 0
 
-botpot = 0
-playersetbet = 0
+botbet = 0
+playerbet = 0
 
 playerchips = 100
 botchips = 100
@@ -101,21 +105,21 @@ def start(firsttime):
         selfdestruct(True, 3)
 
 def playerplacebets(botchips, playerchips):
-    global playersetbet
+    global playerbet
     print(f"You have {playerchips} chips!")
     time.sleep(1)
     if playerchips > 0:
-     playersetbet = input("How much would you like to bet?\nPlease input an integer between and including 1 and the ammount of chips you currently hold!:")
+     playerbet = input("How much would you like to bet?\nPlease input an integer between and including 1 and the ammount of chips you currently hold!:")
      try:
-         playersetbet = int(playersetbet)
+         playerbet = int(playerbet)
      except ValueError:
          print("Please only input a valid integer!\n")
          time.sleep(1)
-         playersetbets(botchips, playerchips)
-     if playersetbet <= playerchips and playersetbet > 0:
-         print(f"You have placed {playersetbet} chips in the pot!")
+         playerbets(botchips, playerchips)
+     if playerbet <= playerchips and playerbet > 0:
+         print(f"You have placed {playerbet} chips in the pot!")
          time.sleep(1)
-         playerchips = playerchips - playersetbet
+         playerchips = playerchips - playerbet
          botsetbet(botchips)
      else:
          print("Try again doofus.")
@@ -125,11 +129,11 @@ def playerplacebets(botchips, playerchips):
         selfdestruct(True,3)  
 
 def botsetbet(botchips):
-    global botpot
+    global botbet
     if botchips > 0:
-        botpot = random.randint(0,botchips)
-        botchips = botchips - botpot
-        print(f"Your opponent has bet {botpot} chips!")
+        botbet = random.randint(0,botchips)
+        botchips = botchips - botbet
+        print(f"Your opponent has bet {botbet} chips!")
         time.sleep(1)
         carddrawsequence()
     else:
@@ -160,7 +164,7 @@ def carddrawsequence():
         carddrawsequence()
 
 def cardcompare():
-    global playercard, playerhasfacecard, playercheck, botcard, bothasfacecard, botcheck, playerchips, botchips, playersetbet, botpot, playerfacecard, botfacecard
+    global playercard, playerhasfacecard, playercheck, botcard, bothasfacecard, botcheck, playerchips, botchips, playerbet, botbet, playerfacecard, botfacecard
     playercheck = True
 
     while playercheck:
@@ -194,53 +198,50 @@ def cardcompare():
      if bothasfacecard and playerhasfacecard:
          if botcard > playercard:
              print(f"Loser! you have: a {playerfacecard.name}! Your enemy has a {botfacecard.name}")
-             botchips = botchips + playersetbet
-             playerchips = playerchips + botpot
-             playagain()
+             payout(False, True, False)
          elif botcard == playercard:
              print(f"uhhhh. you both got {playerfacecard.name} and {botfacecard.name}")
-             playagain()
+             payout(False, False, True)
          else:
              print(f"Winner! you have: a {playerfacecard.name}! Your enemy has a {botfacecard.name}")
-             playerchips = playerchips + botpot
-             botchip = botchips - botpot
-             playagain()
+             payout(True, False, False)
      elif bothasfacecard and not playerhasfacecard:
          if botcard > playercard:
              print(f"Loser you have: a {playercard}! Your enemy has a {botfacecard.name}")
-             botchips = botchips + playersetbet
-             playerchips = playerchips + botpot
-             playagain()
+             payout(False, True, False)
          else:
              print(f"Winner! you have: a {playercard}! Your enemy has an {botfacecard.name}")
-             playerchips = playerchips + botpot
-             botchip = botchips - botpot
-             playagain()
+             payout(True, False, False)
      elif playerhasfacecard and not bothasfacecard:
         if playercard > botcard:
          print(f"Winner! you have: a {playerfacecard.name}! Your enemy has a {botcard}")
-         playerchips = playerchips + botpot
-         botchip = botchips - botpot
-         playagain()
+         payout(True, False, False)
         else:
          print(f"Loser! you have: an {playerfacecard.name}! Your enemy has a {botcard}")
-         botchips = botchips + playersetbet
-         playerchips = playerchips + botpot
-         playagain()
+         payout(False, True, False)
      else:
         if playercard > botcard:
             print(f"You win! You pulled a {playercard} and your enemy pulled a {botcard}")
-            playerchips = playerchips + botpot
-            botchip = botchips - botpot
-            playagain()
+            payout(True, False, False)
         elif botcard < playercard:
             print(f"You lose! You pulled a {playercard} and your enemy pulled a {botcard}")
-            botchips = botchips + playersetbet
-            playerchips = playerchips + botpot
-            playagain()
+            payout(False, True, False)
         else:
             print(f"uhhhh. you both got a {playercard} and a {botcard}")
-            playagain()
+            payout(False, False, True)
+
+def payout(playerwin, botwin, tie):
+    global botchips, botbet, playerchips, playerbet
+    if playerwin and not botwin:
+     playerchips = playerbet + botbet + playerchips
+     botchips = botchips - botbet
+     playagain()
+    elif botwin and not playerwin:
+     botchips = botchips + botbet + playerbet
+     playerchips = playerchips - playerbet
+     playagain()
+    elif tie:
+     playagain()
 
 def playagain():
     time.sleep(1)
