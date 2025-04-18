@@ -131,7 +131,7 @@ def playerplacebets(botchips, playerchips):
 def botsetbet(botchips):
     global botbet
     if botchips > 0:
-        botbet = random.randint(0,botchips)
+        botbet = random.randint(1,botchips)
         botchips = botchips - botbet
         print(f"Your opponent has bet {botbet} chips!")
         time.sleep(1)
