@@ -60,8 +60,8 @@ def returnfacecards():
 playerfacecard = []
 botfacecard = []
 
-yesresponse = ["y","yes"]
-noresponse = ["n","no"]
+yesresponse = ["y","yes", "yeah"]
+noresponse = ["n","no", "nah"]
 
 timer = [1, 2, 3]
 
@@ -115,7 +115,7 @@ def playerplacebets(botchips, playerchips):
      except ValueError:
          print("Please only input a valid integer!\n")
          time.sleep(1)
-         playerbets(botchips, playerchips)
+         playerplacebets(botchips, playerchips)
      if playerbet <= playerchips and playerbet > 0:
          print(f"You have placed {playerbet} chips in the pot!")
          time.sleep(1)
